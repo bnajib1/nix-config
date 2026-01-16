@@ -32,9 +32,6 @@
   programs.vscode = {
     enable = true;
 
-    # Let VS Code manage its own extensions (install Rose Pine via UI: mvllow.rose-pine)
-    mutableExtensionsDir = true;
-
     userSettings = {
       # Font settings
       "editor.fontFamily" = "ComicCode Nerd Font";
@@ -45,6 +42,15 @@
       "workbench.preferredDarkColorTheme" = "Rosé Pine Moon";
       "workbench.preferredLightColorTheme" = "Rosé Pine Dawn";
     };
+
+    extensions = pkgs.vscode-utils.extensionsFromVscodeMarketplace [
+      {
+        name = "rose-pine";
+        publisher = "mvllow";
+        version = "2.9.0";
+        sha256 = "sha256-ibx19iDUXumpc1vTIUubceFyWyD7nUEBlunFDMcdW6E=";
+      }
+    ];
   };
 
   # ============================================================================
