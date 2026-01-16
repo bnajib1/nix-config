@@ -54,17 +54,27 @@
     };
   };
 
-  # Homebrew integration (optional - for casks not in nixpkgs)
-  # Uncomment if you want to manage Homebrew through nix-darwin
-  # homebrew = {
-  #   enable = true;
-  #   onActivation = {
-  #     autoUpdate = true;
-  #     cleanup = "zap";
-  #   };
-  #   casks = [
-  #     "ghostty"
-  #     "visual-studio-code"
-  #   ];
-  # };
+  # Homebrew integration
+  homebrew = {
+    enable = true;
+    onActivation = {
+      autoUpdate = true;
+      cleanup = "zap";
+    };
+    brews = [
+      "defaultbrowser"
+    ];
+    casks = [
+      "signal"
+      "brave-browser"
+      "claude"
+    ];
+  };
+
+  # Set Brave as default browser (will prompt for confirmation on first run)
+  system.activationScripts.postActivation.text = ''
+    if command -v defaultbrowser &> /dev/null; then
+      defaultbrowser brave || true
+    fi
+  '';
 }
