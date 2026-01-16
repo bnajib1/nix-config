@@ -32,6 +32,9 @@
   programs.vscode = {
     enable = true;
 
+    # Let VS Code manage its own extensions (install Rose Pine via UI: mvllow.rose-pine)
+    mutableExtensionsDir = true;
+
     userSettings = {
       # Font settings
       "editor.fontFamily" = "ComicCode Nerd Font";
@@ -42,25 +45,6 @@
       "workbench.preferredDarkColorTheme" = "Rosé Pine Moon";
       "workbench.preferredLightColorTheme" = "Rosé Pine Dawn";
     };
-
-    # Extensions
-    # Note: The Rose Pine theme extension needs to be installed
-    # You can add it via the marketplace ID or find it in nixpkgs
-    extensions = with pkgs.vscode-extensions; [
-      # Add extensions from nixpkgs here
-      # Example: ms-python.python
-    ] ++ pkgs.vscode-utils.extensionsFromVscodeMarketplace [
-      # Rose Pine theme from VS Code marketplace
-      {
-        name = "rose-pine";
-        publisher = "mvllow";
-        version = "2.9.0";
-        # To get the sha256, run:
-        # nix-prefetch-url --type sha256 "https://mvllow.gallery.vsassets.io/_apis/public/gallery/publisher/mvllow/extension/rose-pine/2.9.0/assetbyname/Microsoft.VisualStudio.Services.VSIXPackage"
-        # Then convert to base64: nix hash to-sri --type sha256 <hash>
-        sha256 = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
-      }
-    ];
   };
 
   # ============================================================================
