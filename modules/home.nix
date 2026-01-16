@@ -60,6 +60,12 @@
         version = "2.9.0";
         sha256 = "sha256-ibx19iDUXumpc1vTIUubceFyWyD7nUEBlunFDMcdW6E=";
       }
+      {
+        name = "claude-code";
+        publisher = "anthropic";
+        version = "2.1.9";
+        sha256 = "sha256-aFEBGY3QWSmPK6709juFStmdZzzmEXoC2Kzljs/bG+U=";
+      }
     ];
   };
 
