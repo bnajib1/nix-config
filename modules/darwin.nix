@@ -16,7 +16,6 @@
   # System packages available to all users
   environment.systemPackages = with pkgs; [
     git
-    vim
   ];
 
   # Create /etc/zshrc that loads nix-darwin environment
@@ -45,7 +44,6 @@
     # Finder settings
     finder = {
       AppleShowAllExtensions = true;
-      FXPreferredViewStyle = "clmv"; # Column view
     };
 
     # Global settings
