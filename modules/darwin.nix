@@ -39,6 +39,8 @@
     dock = {
       autohide = true;
       show-recents = false;
+      # Disable bottom-right hot corner (Quick Note/Sticky Notes)
+      wvous-br-corner = 1;
     };
 
     # Finder settings
