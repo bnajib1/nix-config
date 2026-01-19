@@ -66,6 +66,12 @@
         version = "2.1.9";
         sha256 = "sha256-aFEBGY3QWSmPK6709juFStmdZzzmEXoC2Kzljs/bG+U=";
       }
+      {
+        name = "latex-workshop";
+        publisher = "James-Yu";
+        version = "10.9.1";
+        sha256 = "sha256-R+tJ3k71rlzfxtz4Dib6JiU7Sipq/UTP38ERAhojY7c=";
+      }
     ];
   };
 

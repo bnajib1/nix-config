@@ -68,6 +68,7 @@
       "signal"
       "brave-browser"
       "claude"
+      "mactex"
     ];
   };
 
