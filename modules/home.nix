@@ -47,6 +47,9 @@
       "editor.fontFamily" = "ComicCode Nerd Font";
       "editor.fontLigatures" = true;
 
+      # Editor settings
+      "editor.minimap.enabled" = false;
+
       # Auto dark/light theme switching
       "window.autoDetectColorScheme" = true;
       "workbench.preferredDarkColorTheme" = "Rosé Pine Moon";
