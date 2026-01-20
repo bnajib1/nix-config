@@ -54,6 +54,20 @@
       # Enable dark mode based on system preference
       AppleInterfaceStyleSwitchesAutomatically = true;
     };
+
+    # Disable Siri
+    CustomUserPreferences = {
+      "com.apple.assistant.support" = {
+        "Assistant Enabled" = false;
+      };
+      "com.apple.Siri" = {
+        StatusMenuVisible = false;
+        UserHasDeclinedEnable = true;
+      };
+      "com.apple.Spotlight" = {
+        MenuItemHidden = true;
+      };
+    };
   };
 
   # Homebrew integration
