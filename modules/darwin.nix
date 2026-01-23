@@ -85,6 +85,8 @@
       "brave-browser"
       "claude"
       "mactex"
+      "iina"
+      "qbittorrent"
     ];
   };
 
