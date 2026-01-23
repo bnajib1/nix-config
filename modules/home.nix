@@ -50,6 +50,7 @@
       # Editor settings
       "editor.minimap.enabled" = false;
       "editor.rulers" = [ 80 ];
+      "editor.acceptSuggestionOnEnter" = "off";
 
       # Auto dark/light theme switching
       "window.autoDetectColorScheme" = true;
