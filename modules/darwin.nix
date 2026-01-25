@@ -87,6 +87,7 @@
       "mactex"
       "iina"
       "qbittorrent"
+      "protonvpn"
     ];
   };
 
