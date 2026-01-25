@@ -37,6 +37,17 @@
   };
 
   # ============================================================================
+  # qBittorrent Configuration
+  # ============================================================================
+  home.file."Library/Preferences/qBittorrent/qBittorrent.ini" = {
+    text = ''
+      [BitTorrent]
+      Session\MaxRatio=0
+      Session\MaxRatioAction=0
+    '';
+  };
+
+  # ============================================================================
   # VS Code Configuration
   # ============================================================================
   programs.vscode = {
