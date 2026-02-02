@@ -91,16 +91,35 @@
     ];
   };
 
-  # Set Brave as default browser and PDF viewer
+  # Set default applications for file types
   system.activationScripts.postActivation.text = ''
     if command -v defaultbrowser &> /dev/null; then
       defaultbrowser brave || true
     fi
-    # Set Brave as default app for PDF files using native Launch Services API
+    # Set default apps using native Launch Services API
     swift - <<'SWIFT' 2>/dev/null || true
     import Foundation
     import CoreServices
+
+    // Brave for PDF
     LSSetDefaultRoleHandlerForContentType("com.adobe.pdf" as CFString, .all, "com.brave.Browser" as CFString)
+
+    // IINA for video formats
+    let videoTypes = [
+      "public.movie",
+      "public.video",
+      "public.avi",
+      "public.mpeg",
+      "public.mpeg-4",
+      "com.apple.quicktime-movie",
+      "public.3gpp",
+      "public.3gpp2",
+      "org.matroska.mkv",
+      "com.microsoft.windows-media-wmv"
+    ]
+    for type in videoTypes {
+      LSSetDefaultRoleHandlerForContentType(type as CFString, .all, "com.colliderli.iina" as CFString)
+    }
     SWIFT
   '';
 }
