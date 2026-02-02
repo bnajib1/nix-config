@@ -91,10 +91,16 @@
     ];
   };
 
-  # Set Brave as default browser (will prompt for confirmation on first run)
+  # Set Brave as default browser and PDF viewer
   system.activationScripts.postActivation.text = ''
     if command -v defaultbrowser &> /dev/null; then
       defaultbrowser brave || true
     fi
+    # Set Brave as default app for PDF files using native Launch Services API
+    swift - <<'SWIFT' 2>/dev/null || true
+    import Foundation
+    import CoreServices
+    LSSetDefaultRoleHandlerForContentType("com.adobe.pdf" as CFString, .all, "com.brave.Browser" as CFString)
+    SWIFT
   '';
 }
