@@ -67,6 +67,10 @@
       "com.apple.Spotlight" = {
         MenuItemHidden = true;
       };
+      # IINA: Quit when last window closes
+      "com.colliderli.iina" = {
+        quitWhenNoOpenedWindow = true;
+      };
     };
   };
 
