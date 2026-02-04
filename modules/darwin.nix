@@ -39,6 +39,16 @@
     dock = {
       autohide = true;
       show-recents = false;
+      tilesize = 52;
+      persistent-apps = [
+        "/Applications/Brave Browser.app"
+        "/System/Applications/Calendar.app"
+        "/System/Applications/Notes.app"
+        "/Applications/Signal.app"
+        "/Applications/Visual Studio Code.app"
+        "/Applications/Ghostty.app"
+        "/System/Applications/System Settings.app"
+      ];
       # Disable bottom-right hot corner (Quick Note/Sticky Notes)
       wvous-br-corner = 1;
     };
