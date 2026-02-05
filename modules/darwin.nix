@@ -116,7 +116,7 @@
     import CoreServices
 
     // Brave for PDF
-    LSSetDefaultRoleHandlerForContentType("com.adobe.pdf" as CFString, .all, "com.brave.Browser" as CFString)
+    LSSetDefaultRoleHandlerForContentType("com.adobe.pdf" as CFString, LSRolesMask.all, "com.brave.Browser" as CFString)
 
     // IINA for video formats
     let videoTypes = [
@@ -132,7 +132,7 @@
       "com.microsoft.windows-media-wmv"
     ]
     for type in videoTypes {
-      LSSetDefaultRoleHandlerForContentType(type as CFString, .all, "com.colliderli.iina" as CFString)
+      LSSetDefaultRoleHandlerForContentType(type as CFString, LSRolesMask.all, "com.colliderli.iina" as CFString)
     }
     SWIFT
   '';
