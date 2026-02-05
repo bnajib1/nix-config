@@ -115,6 +115,9 @@
     import Foundation
     import CoreServices
 
+    // VS Code for Markdown
+    LSSetDefaultRoleHandlerForContentType("net.daringfireball.markdown" as CFString, LSRolesMask.all, "com.microsoft.VSCode" as CFString)
+
     // Brave for PDF
     LSSetDefaultRoleHandlerForContentType("com.adobe.pdf" as CFString, LSRolesMask.all, "com.brave.Browser" as CFString)
 
