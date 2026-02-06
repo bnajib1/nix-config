@@ -48,6 +48,86 @@
   };
 
   # ============================================================================
+  # Brave Browser Configuration
+  # ============================================================================
+  # Merges settings into Brave's Preferences on activation.
+  # Close Brave before running `darwin-rebuild switch` for settings to apply.
+  # Bitwarden must be installed from Chrome Web Store on first setup:
+  # https://chromewebstore.google.com/detail/bitwarden/nngceckbapebfimnlniiiahkandclblb
+  home.activation.braveConfig = let
+    bravePrefs = builtins.toJSON {
+      brave = {
+        # Vertical tabs with card preview on hover
+        tabs = {
+          vertical_tabs_enabled = true;
+          hover_mode = 2;
+        };
+        # Wide URL bar
+        location_bar_is_wide = true;
+        # Hide side panel button
+        show_side_panel_button = false;
+        # Hide bookmark bar on new tab page
+        always_show_bookmark_bar_on_ntp = false;
+        # Confirm before closing window with multiple tabs
+        enable_window_closing_confirm = true;
+        # Disable Leo AI
+        ai_chat = {
+          show_toolbar_button = false;
+          autocomplete_provider_enabled = false;
+        };
+        # Hide VPN button
+        brave_vpn = {
+          show_button = false;
+        };
+        # Hide crypto wallet icon
+        wallet = {
+          show_wallet_icon_on_toolbar = false;
+        };
+        # Hide rewards button
+        rewards = {
+          show_brave_rewards_button_in_location_bar = false;
+        };
+        # Clean new tab page
+        new_tab_page = {
+          show_brave_news = false;
+          show_rewards = false;
+          show_brave_vpn = false;
+          show_together = false;
+        };
+        # Disable omnibox bookmark and commander suggestions
+        omnibox = {
+          bookmark_suggestions_enabled = false;
+          commander_suggestions_enabled = false;
+        };
+      };
+      # Pin Bitwarden extension to toolbar
+      extensions = {
+        pinned_extensions = [ "nngceckbapebfimnlniiiahkandclblb" ];
+      };
+    };
+    braveLocalState = builtins.toJSON {
+      brave = {
+        # Enable Widevine DRM support (Netflix, etc.)
+        widevine_opted_in = true;
+      };
+    };
+  in lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    BRAVE_DIR="$HOME/Library/Application Support/BraveSoftware/Brave-Browser"
+    BRAVE_PREFS="$BRAVE_DIR/Default/Preferences"
+    BRAVE_LOCAL="$BRAVE_DIR/Local State"
+
+    if [ -f "$BRAVE_PREFS" ]; then
+      ${pkgs.jq}/bin/jq --argjson new '${bravePrefs}' '. * $new' "$BRAVE_PREFS" > "$BRAVE_PREFS.tmp" \
+        && mv "$BRAVE_PREFS.tmp" "$BRAVE_PREFS"
+    fi
+
+    if [ -f "$BRAVE_LOCAL" ]; then
+      ${pkgs.jq}/bin/jq --argjson new '${braveLocalState}' '. * $new' "$BRAVE_LOCAL" > "$BRAVE_LOCAL.tmp" \
+        && mv "$BRAVE_LOCAL.tmp" "$BRAVE_LOCAL"
+    fi
+  '';
+
+  # ============================================================================
   # VS Code Configuration
   # ============================================================================
   programs.vscode = {
