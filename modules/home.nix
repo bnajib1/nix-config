@@ -62,8 +62,6 @@
           vertical_tabs_enabled = true;
           hover_mode = 2;
         };
-        # Hide tab search button
-        tabs_search_show = false;
         # Wide URL bar
         location_bar_is_wide = true;
         # Hide side panel button
