@@ -104,6 +104,10 @@
       extensions = {
         pinned_extensions = [ "nngceckbapebfimnlniiiahkandclblb" ];
       };
+      # Hide tab search button from toolbar
+      toolbar = {
+        pinned_actions = [ "kActionShowChromeLabs" ];
+      };
     };
     braveLocalState = builtins.toJSON {
       brave = {
