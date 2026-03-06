@@ -22,7 +22,7 @@
   home.file."Library/Application Support/com.mitchellh.ghostty/config" = {
     text = ''
       font-family = ComicCode Nerd Font
-      theme = light:Rose Pine Dawn,dark:Rose Pine Moon
+      theme = Nord
     '';
   };
 
@@ -149,16 +149,16 @@
 
       # Auto dark/light theme switching
       "window.autoDetectColorScheme" = true;
-      "workbench.preferredDarkColorTheme" = "Rosé Pine Moon";
-      "workbench.preferredLightColorTheme" = "Rosé Pine Dawn";
+      "workbench.preferredDarkColorTheme" = "Nord";
+      "workbench.preferredLightColorTheme" = "Nord";
     };
 
     extensions = pkgs.vscode-utils.extensionsFromVscodeMarketplace [
       {
-        name = "rose-pine";
-        publisher = "mvllow";
-        version = "2.9.0";
-        sha256 = "sha256-ibx19iDUXumpc1vTIUubceFyWyD7nUEBlunFDMcdW6E=";
+        name = "nord-visual-studio-code";
+        publisher = "arcticicestudio";
+        version = "0.19.0";
+        sha256 = "sha256-awbqFv6YuYI0tzM/QbHRTUl4B2vNUdy52F4nPmv+dRU=";
       }
       {
         name = "claude-code";
