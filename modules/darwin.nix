@@ -53,6 +53,14 @@
       wvous-br-corner = 1;
     };
 
+    # Window Manager / Stage Manager settings
+    WindowManager = {
+      StandardHideDesktopIcons = true;       # Disable "Show items on desktop"
+      StandardHideWidgets = true;             # Disable "Show widgets on desktop"
+      HideDesktop = true;                    # Disable "Show items in Stage Manager"
+      EnableStandardClickToShowDesktop = false; # "Click wallpaper to show desktop" = Only in Stage Manager
+    };
+
     # Finder settings
     finder = {
       AppleShowAllExtensions = true;
@@ -117,6 +125,9 @@
 
     // VS Code for Markdown
     LSSetDefaultRoleHandlerForContentType("net.daringfireball.markdown" as CFString, LSRolesMask.all, "com.microsoft.VSCode" as CFString)
+
+    // VS Code for CSV
+    LSSetDefaultRoleHandlerForContentType("public.comma-separated-values-text" as CFString, LSRolesMask.all, "com.microsoft.VSCode" as CFString)
 
     // Brave for PDF
     LSSetDefaultRoleHandlerForContentType("com.adobe.pdf" as CFString, LSRolesMask.all, "com.brave.Browser" as CFString)
