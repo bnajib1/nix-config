@@ -39,21 +39,87 @@
   # ============================================================================
   # qBittorrent Configuration
   # ============================================================================
-  home.file."Library/Preferences/qBittorrent/qBittorrent.ini" = {
-    text = ''
-      [BitTorrent]
-      Session\MaxRatio=0
-      Session\MaxRatioAction=0
-    '';
-  };
+  # qBittorrent rewrites this file at runtime, so merge the desired keys instead
+  # of making the INI immutable with home.file.
+  home.activation.qbittorrentConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    QBITTORRENT_DIR="$HOME/Library/Preferences/qBittorrent"
+    QBITTORRENT_INI="$QBITTORRENT_DIR/qBittorrent.ini"
+    TMP_FILE="$(mktemp)"
+
+    mkdir -p "$QBITTORRENT_DIR"
+    touch "$QBITTORRENT_INI"
+
+    awk '
+      BEGIN {
+        in_section = 0
+        saw_section = 0
+        saw_max_ratio = 0
+        saw_ratio_action = 0
+      }
+
+      /^\[BitTorrent\]$/ {
+        saw_section = 1
+        in_section = 1
+        print
+        next
+      }
+
+      /^\[/ {
+        if (in_section) {
+          if (!saw_max_ratio) {
+            print "Session\\MaxRatio=0"
+          }
+          if (!saw_ratio_action) {
+            print "Session\\MaxRatioAction=0"
+          }
+          in_section = 0
+        }
+        print
+        next
+      }
+
+      in_section && /^Session[\\]+MaxRatio=/ {
+        print "Session\\MaxRatio=0"
+        saw_max_ratio = 1
+        next
+      }
+
+      in_section && /^Session[\\]+MaxRatioAction=/ {
+        print "Session\\MaxRatioAction=0"
+        saw_ratio_action = 1
+        next
+      }
+
+      {
+        print
+      }
+
+      END {
+        if (!saw_section) {
+          if (NR > 0) {
+            print ""
+          }
+          print "[BitTorrent]"
+          print "Session\\MaxRatio=0"
+          print "Session\\MaxRatioAction=0"
+        } else if (in_section) {
+          if (!saw_max_ratio) {
+            print "Session\\MaxRatio=0"
+          }
+          if (!saw_ratio_action) {
+            print "Session\\MaxRatioAction=0"
+          }
+        }
+      }
+    ' "$QBITTORRENT_INI" > "$TMP_FILE" && mv "$TMP_FILE" "$QBITTORRENT_INI"
+  '';
 
   # ============================================================================
   # Brave Browser Configuration
   # ============================================================================
   # Merges settings into Brave's Preferences on activation.
   # Close Brave before running `darwin-rebuild switch` for settings to apply.
-  # Bitwarden must be installed from Chrome Web Store on first setup:
-  # https://chromewebstore.google.com/detail/bitwarden/nngceckbapebfimnlniiiahkandclblb
+  # Bitwarden is installed by a managed Brave policy in modules/darwin.nix.
   home.activation.braveConfig = let
     bravePrefs = builtins.toJSON {
       brave = {
@@ -120,15 +186,34 @@
     BRAVE_PREFS="$BRAVE_DIR/Default/Preferences"
     BRAVE_LOCAL="$BRAVE_DIR/Local State"
 
-    if [ -f "$BRAVE_PREFS" ]; then
-      ${pkgs.jq}/bin/jq --argjson new '${bravePrefs}' '. * $new' "$BRAVE_PREFS" > "$BRAVE_PREFS.tmp" \
-        && mv "$BRAVE_PREFS.tmp" "$BRAVE_PREFS"
-    fi
+    ensure_json_file() {
+      local target="$1"
+      local label="$2"
+      local backup="$target.pre-nix-config.bak"
 
-    if [ -f "$BRAVE_LOCAL" ]; then
-      ${pkgs.jq}/bin/jq --argjson new '${braveLocalState}' '. * $new' "$BRAVE_LOCAL" > "$BRAVE_LOCAL.tmp" \
-        && mv "$BRAVE_LOCAL.tmp" "$BRAVE_LOCAL"
-    fi
+      mkdir -p "$(dirname "$target")"
+
+      if [ ! -f "$target" ]; then
+        printf '{}\n' > "$target"
+        return
+      fi
+
+      if ! ${pkgs.jq}/bin/jq empty "$target" >/dev/null 2>&1; then
+        cp "$target" "$backup"
+        printf '{}\n' > "$target"
+        printf 'warning: reset invalid %s JSON and backed it up to %s\n' "$label" "$backup" >&2
+      fi
+    }
+
+    mkdir -p "$BRAVE_DIR/Default"
+    ensure_json_file "$BRAVE_PREFS" "Brave Preferences"
+    ensure_json_file "$BRAVE_LOCAL" "Brave Local State"
+
+    ${pkgs.jq}/bin/jq --argjson new '${bravePrefs}' '. * $new' "$BRAVE_PREFS" > "$BRAVE_PREFS.tmp" \
+      && mv "$BRAVE_PREFS.tmp" "$BRAVE_PREFS"
+
+    ${pkgs.jq}/bin/jq --argjson new '${braveLocalState}' '. * $new' "$BRAVE_LOCAL" > "$BRAVE_LOCAL.tmp" \
+      && mv "$BRAVE_LOCAL.tmp" "$BRAVE_LOCAL"
   '';
 
   # ============================================================================
@@ -137,42 +222,44 @@
   programs.vscode = {
     enable = true;
 
-    userSettings = {
-      # Font settings
-      "editor.fontFamily" = "ComicCode Nerd Font";
-      "editor.fontLigatures" = true;
+    profiles.default = {
+      userSettings = {
+        # Font settings
+        "editor.fontFamily" = "ComicCode Nerd Font";
+        "editor.fontLigatures" = true;
 
-      # Editor settings
-      "editor.minimap.enabled" = false;
-      "editor.rulers" = [ 80 ];
-      "editor.acceptSuggestionOnEnter" = "off";
+        # Editor settings
+        "editor.minimap.enabled" = false;
+        "editor.rulers" = [ 80 ];
+        "editor.acceptSuggestionOnEnter" = "off";
 
-      # Auto dark/light theme switching
-      "window.autoDetectColorScheme" = true;
-      "workbench.preferredDarkColorTheme" = "Nord";
-      "workbench.preferredLightColorTheme" = "Nord";
+        # Auto dark/light theme switching
+        "window.autoDetectColorScheme" = true;
+        "workbench.preferredDarkColorTheme" = "Nord";
+        "workbench.preferredLightColorTheme" = "Nord";
+      };
+
+      extensions = pkgs.vscode-utils.extensionsFromVscodeMarketplace [
+        {
+          name = "nord-visual-studio-code";
+          publisher = "arcticicestudio";
+          version = "0.19.0";
+          sha256 = "sha256-awbqFv6YuYI0tzM/QbHRTUl4B2vNUdy52F4nPmv+dRU=";
+        }
+        {
+          name = "claude-code";
+          publisher = "anthropic";
+          version = "2.1.9";
+          sha256 = "sha256-Njb0h5z7J8HTG2HATLug1wF+wqE2ab/ojJtPub5Sv1Q=";
+        }
+        {
+          name = "latex-workshop";
+          publisher = "James-Yu";
+          version = "10.9.1";
+          sha256 = "sha256-R+tJ3k71rlzfxtz4Dib6JiU7Sipq/UTP38ERAhojY7c=";
+        }
+      ];
     };
-
-    extensions = pkgs.vscode-utils.extensionsFromVscodeMarketplace [
-      {
-        name = "nord-visual-studio-code";
-        publisher = "arcticicestudio";
-        version = "0.19.0";
-        sha256 = "sha256-awbqFv6YuYI0tzM/QbHRTUl4B2vNUdy52F4nPmv+dRU=";
-      }
-      {
-        name = "claude-code";
-        publisher = "anthropic";
-        version = "2.1.9";
-        sha256 = "sha256-aFEBGY3QWSmPK6709juFStmdZzzmEXoC2Kzljs/bG+U=";
-      }
-      {
-        name = "latex-workshop";
-        publisher = "James-Yu";
-        version = "10.9.1";
-        sha256 = "sha256-R+tJ3k71rlzfxtz4Dib6JiU7Sipq/UTP38ERAhojY7c=";
-      }
-    ];
   };
 
   # ============================================================================
