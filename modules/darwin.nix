@@ -1,5 +1,10 @@
 { pkgs, username, ... }:
 
+let
+  commandUpArrow = "@" + builtins.fromJSON "\"\\uf700\"";
+  commandDownArrow = "@" + builtins.fromJSON "\"\\uf701\"";
+in
+
 {
   # Nix configuration
   nix = {
@@ -88,6 +93,12 @@
       };
       "com.apple.Spotlight" = {
         MenuItemHidden = true;
+      };
+      "com.brave.Browser" = {
+        NSUserKeyEquivalents = {
+          "Select Previous Tab" = commandUpArrow;
+          "Select Next Tab" = commandDownArrow;
+        };
       };
       # IINA: Quit when last window closes
       "com.colliderli.iina" = {
