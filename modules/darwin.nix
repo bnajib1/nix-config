@@ -75,6 +75,9 @@
 
     # Disable Siri
     CustomUserPreferences = {
+      "NSGlobalDomain" = {
+        NSAutomaticEmojiSubstitutionEnabled = false;
+      };
       "com.apple.assistant.support" = {
         "Assistant Enabled" = false;
       };
