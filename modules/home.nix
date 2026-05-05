@@ -1,5 +1,75 @@
 { config, pkgs, lib, ... }:
 
+let
+  wallpaperTarget = "Pictures/Wallpapers/paisagem-branca.jpg";
+  applyWallpaper = pkgs.writeShellScript "apply-wallpaper" ''
+    set -eu
+
+    WALLPAPER="$HOME/${wallpaperTarget}"
+
+    if [ ! -f "$WALLPAPER" ]; then
+      printf 'warning: wallpaper is unavailable at %s\n' "$WALLPAPER" >&2
+      exit 0
+    fi
+
+    export CLANG_MODULE_CACHE_PATH=/tmp/nix-config-clang-module-cache
+    mkdir -p "$CLANG_MODULE_CACHE_PATH"
+
+    /usr/bin/swift - "$WALLPAPER" <<'SWIFT'
+    import AppKit
+    import Darwin
+    import Foundation
+
+    func warn(_ message: String) {
+      FileHandle.standardError.write(Data(("warning: \(message)\n").utf8))
+    }
+
+    guard CommandLine.arguments.count > 1 else {
+      warn("missing wallpaper path")
+      exit(1)
+    }
+
+    let wallpaperURL = URL(fileURLWithPath: CommandLine.arguments[1])
+    guard FileManager.default.fileExists(atPath: wallpaperURL.path) else {
+      warn("wallpaper does not exist at \(wallpaperURL.path)")
+      exit(0)
+    }
+
+    let fillColor = NSColor(
+      calibratedRed: 0.2549019608,
+      green: 0.4117647059,
+      blue: 0.6666666667,
+      alpha: 1.0
+    )
+    let options: [NSWorkspace.DesktopImageOptionKey: Any] = [
+      .imageScaling: NSNumber(value: NSImageScaling.scaleProportionallyUpOrDown.rawValue),
+      .allowClipping: NSNumber(value: true),
+      .fillColor: fillColor
+    ]
+
+    let screens = NSScreen.screens
+    if screens.isEmpty {
+      warn("no active screens are available for wallpaper assignment")
+      exit(0)
+    }
+
+    var failures = 0
+    for screen in screens {
+      do {
+        try NSWorkspace.shared.setDesktopImageURL(wallpaperURL, for: screen, options: options)
+      } catch {
+        failures += 1
+        warn("failed to set wallpaper for \(screen.localizedName): \(error)")
+      }
+    }
+
+    if failures > 0 {
+      exit(1)
+    }
+    SWIFT
+  '';
+in
+
 {
   # Home Manager needs a bit of information about you and the paths it should manage
   home.stateVersion = "24.05";
@@ -14,6 +84,26 @@
   home.file."Library/Fonts/ComicCodeNerdFont-Regular.otf" = {
     source = ../fonts/ComicCodeNerdFont-Regular.otf;
   };
+
+  # ============================================================================
+  # Wallpaper
+  # ============================================================================
+  # Current macOS placement: Crop, with the stored fill color preserved.
+  home.file.${wallpaperTarget} = {
+    source = ../wallpapers/paisagem-branca.jpg;
+  };
+
+  launchd.agents.apply-wallpaper = {
+    enable = true;
+    config = {
+      ProgramArguments = [ "${applyWallpaper}" ];
+      RunAtLoad = true;
+    };
+  };
+
+  home.activation.applyWallpaper = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    ${applyWallpaper} || printf 'warning: failed to set wallpaper\n' >&2
+  '';
 
   # ============================================================================
   # Ghostty Configuration
