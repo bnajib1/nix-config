@@ -117,16 +117,6 @@ in
   };
 
   # ============================================================================
-  # Claude Code Configuration
-  # ============================================================================
-  home.file.".claude/settings.json" = {
-    text = builtins.toJSON {
-      includeCoAuthoredBy = false;
-      model = "claude-opus-4-5-20251101";
-    };
-  };
-
-  # ============================================================================
   # qBittorrent Configuration
   # ============================================================================
   # qBittorrent rewrites this file at runtime, so merge the desired keys instead
@@ -337,12 +327,6 @@ in
           sha256 = "sha256-awbqFv6YuYI0tzM/QbHRTUl4B2vNUdy52F4nPmv+dRU=";
         }
         {
-          name = "claude-code";
-          publisher = "anthropic";
-          version = "2.1.9";
-          sha256 = "sha256-Njb0h5z7J8HTG2HATLug1wF+wqE2ab/ojJtPub5Sv1Q=";
-        }
-        {
           name = "latex-workshop";
           publisher = "James-Yu";
           version = "10.9.1";
@@ -356,9 +340,8 @@ in
   # Additional Packages (optional)
   # ============================================================================
   home.packages = with pkgs; [
-    # Add any additional packages you want installed
-    # ripgrep
-    # fd
-    # bat
+    codex
+    gh
+    mactop
   ];
 }

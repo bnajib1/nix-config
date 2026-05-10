@@ -120,7 +120,6 @@ in
     casks = [
       "signal"
       "brave-browser"
-      "claude"
       "ghostty"
       "mactex"
       "iina"
