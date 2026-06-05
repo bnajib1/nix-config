@@ -192,7 +192,7 @@ in
     plist_set_string \
       "$BRAVE_POLICY_PLIST" \
       "ExtensionSettings:nngceckbapebfimnlniiiahkandclblb:update_url" \
-      "https://clients2.google.com/service/update2/crx"
+      "https://extensionupdater.brave.com/service/update2/crx"
     chmod 644 "$BRAVE_POLICY_PLIST"
     chown root:wheel "$BRAVE_POLICY_PLIST"
     /usr/bin/killall cfprefsd >/dev/null 2>&1 || true
