@@ -147,8 +147,9 @@ in
   # Set default applications for file types
   system.activationScripts.postActivation.text = ''
     # Strip quarantine flags from Homebrew-installed apps
-    find /Applications -maxdepth 1 -name '*.app' -xattr com.apple.quarantine \
-      -exec xattr -d com.apple.quarantine {} \; 2>/dev/null || true
+    for app in /Applications/*.app; do
+      xattr -d com.apple.quarantine "$app" 2>/dev/null || true
+    done
 
     # Install Rosetta if not present
     if ! /usr/bin/pgrep -q oahd 2>/dev/null; then
