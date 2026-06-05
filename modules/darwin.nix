@@ -193,6 +193,10 @@ in
       "$BRAVE_POLICY_PLIST" \
       "ExtensionSettings:nngceckbapebfimnlniiiahkandclblb:update_url" \
       "https://extensionupdater.brave.com/service/update2/crx"
+    plist_set_string \
+      "$BRAVE_POLICY_PLIST" \
+      "ExtensionSettings:nngceckbapebfimnlniiiahkandclblb:toolbar_pin" \
+      "force_pinned"
     chmod 644 "$BRAVE_POLICY_PLIST"
     chown root:wheel "$BRAVE_POLICY_PLIST"
     /usr/bin/killall cfprefsd >/dev/null 2>&1 || true
