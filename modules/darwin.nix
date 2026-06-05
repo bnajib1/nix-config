@@ -76,9 +76,6 @@ in
       "com.apple.sound.beep.feedback" = 0;
     };
 
-    # Keep Tahoe Liquid Glass transparency enabled.
-    universalaccess.reduceTransparency = false;
-
     # Set time zone automatically from current location
     CustomSystemPreferences = {
       "com.apple.timezone.auto" = {
