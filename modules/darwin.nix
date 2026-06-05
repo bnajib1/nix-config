@@ -45,9 +45,9 @@ in
         "/System/Applications/Calendar.app"
         "/System/Applications/Notes.app"
         "/Applications/Signal.app"
+        "/Applications/Slack.app"
         "/Applications/Visual Studio Code.app"
         "/Applications/Ghostty.app"
-        "/Applications/Slack.app"
         "/System/Applications/System Settings.app"
       ];
       # Disable bottom-right hot corner (Quick Note/Sticky Notes)
