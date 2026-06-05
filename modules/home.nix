@@ -247,6 +247,21 @@ in
           commander_suggestions_enabled = false;
         };
       };
+      # Default search engine: Google (normal + private)
+      default_search_provider_data = {
+        template_url_data = {
+          keyword = "google.com";
+          short_name = "Google";
+          url = "https://www.google.com/search?q={searchTerms}";
+        };
+      };
+      default_private_search_provider_data = {
+        template_url_data = {
+          keyword = "google.com";
+          short_name = "Google";
+          url = "https://www.google.com/search?q={searchTerms}";
+        };
+      };
       # Pin Bitwarden extension to toolbar
       extensions = {
         pinned_extensions = [ "nngceckbapebfimnlniiiahkandclblb" ];
