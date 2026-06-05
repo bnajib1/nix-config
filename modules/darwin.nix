@@ -85,7 +85,16 @@ in
     # Keep Tahoe Liquid Glass transparency enabled.
     universalaccess.reduceTransparency = false;
 
-    # Disable Siri
+    # Set time zone automatically from current location
+    CustomSystemPreferences = {
+      "com.apple.timezone.auto" = {
+        Active = true;
+      };
+    };
+
+    # Show seconds in menu bar clock
+    menuExtraClock.ShowSeconds = true;
+
     CustomUserPreferences = {
       "NSGlobalDomain" = {
         # Keep Tahoe's Liquid Glass renderer enabled and allow wallpaper tinting.
