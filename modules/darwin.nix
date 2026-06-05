@@ -197,9 +197,6 @@ in
       "$BRAVE_POLICY_PLIST" \
       "ExtensionSettings:nngceckbapebfimnlniiiahkandclblb:toolbar_pin" \
       "force_pinned"
-    # Disable built-in password manager
-    /usr/libexec/PlistBuddy -c "Delete :PasswordManagerEnabled" "$BRAVE_POLICY_PLIST" 2>/dev/null || true
-    /usr/libexec/PlistBuddy -c "Add :PasswordManagerEnabled bool false" "$BRAVE_POLICY_PLIST"
     # Force Google as default search engine (normal + private)
     /usr/libexec/PlistBuddy -c "Delete :DefaultSearchProviderEnabled" "$BRAVE_POLICY_PLIST" 2>/dev/null || true
     /usr/libexec/PlistBuddy -c "Add :DefaultSearchProviderEnabled bool true" "$BRAVE_POLICY_PLIST"
