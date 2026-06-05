@@ -247,6 +247,9 @@ in
           commander_suggestions_enabled = false;
         };
       };
+      # Disable built-in password manager
+      credentials_enable_service = false;
+      credentials_enable_autosignin = false;
       # Pin Bitwarden extension to toolbar
       extensions = {
         pinned_extensions = [ "nngceckbapebfimnlniiiahkandclblb" ];
