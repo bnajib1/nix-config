@@ -379,6 +379,7 @@ in
   home.activation.screenshotShortcut = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     /usr/bin/defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 31 \
       '{ enabled = 1; value = { parameters = (119, 13, 1179648); type = standard; }; }'
+    /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
   '';
 
   # ============================================================================
