@@ -45,8 +45,9 @@ in
         "/System/Applications/Calendar.app"
         "/System/Applications/Notes.app"
         "/Applications/Signal.app"
-        "/Users/${username}/Applications/Home Manager Apps/Visual Studio Code.app"
+        "/Applications/Visual Studio Code.app"
         "/Applications/Ghostty.app"
+        "/Applications/Slack.app"
         "/System/Applications/System Settings.app"
       ];
       # Disable bottom-right hot corner (Quick Note/Sticky Notes)
@@ -118,6 +119,10 @@ in
       "com.colliderli.iina" = {
         quitWhenNoOpenedWindow = true;
       };
+      # Remove Downloads folder from dock (Trash stays — it's hardcoded by macOS)
+      "com.apple.dock" = {
+        persistent-others = [];
+      };
     };
   };
 
@@ -137,6 +142,7 @@ in
       "brave-browser"
       "ghostty"
       "slack"
+      "visual-studio-code"
       "mactex"
       "iina"
       "qbittorrent"
@@ -155,22 +161,6 @@ in
     if ! /usr/bin/pgrep -q oahd 2>/dev/null; then
       softwareupdate --install-rosetta --agree-to-license 2>/dev/null || true
     fi
-
-    # Remap "Copy picture of selected area to clipboard" to Cmd+Shift+W
-    defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add "31" \
-      '<dict>
-        <key>enabled</key><true/>
-        <key>value</key>
-        <dict>
-          <key>parameters</key>
-          <array>
-            <integer>119</integer>
-            <integer>13</integer>
-            <integer>1179648</integer>
-          </array>
-          <key>type</key><string>standard</string>
-        </dict>
-      </dict>'
 
     warn() {
       printf 'warning: %s\n' "$1" >&2
@@ -205,9 +195,11 @@ in
     chown root:wheel "$BRAVE_POLICY_PLIST"
     /usr/bin/killall cfprefsd >/dev/null 2>&1 || true
 
+    # Run as the user so Launch Services sees Brave as an HTTP handler
     if [ -x /opt/homebrew/bin/defaultbrowser ]; then
       if [ -d "/Applications/Brave Browser.app" ]; then
-        /opt/homebrew/bin/defaultbrowser brave || warn "failed to set Brave as the default browser"
+        sudo -u ${username} /opt/homebrew/bin/defaultbrowser brave \
+          || warn "failed to set Brave as the default browser"
       else
         warn "Brave Browser.app is not installed yet; skipping default browser assignment"
       fi
@@ -216,8 +208,7 @@ in
     fi
 
     CODE_APP=0
-    if [ -d "/Applications/Visual Studio Code.app" ] \
-      || [ -d "/Users/${username}/Applications/Home Manager Apps/Visual Studio Code.app" ]; then
+    if [ -d "/Applications/Visual Studio Code.app" ]; then
       CODE_APP=1
     fi
     BRAVE_APP=0

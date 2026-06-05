@@ -108,11 +108,11 @@ in
   # ============================================================================
   # Ghostty Configuration
   # ============================================================================
-  # Config location: ~/Library/Application Support/com.mitchellh.ghostty/config
   home.file."Library/Application Support/com.mitchellh.ghostty/config" = {
     text = ''
       font-family = ComicCode Nerd Font
       theme = Nord
+      auto-update = check
     '';
   };
 
@@ -299,42 +299,27 @@ in
   # ============================================================================
   # VS Code Configuration
   # ============================================================================
-  programs.vscode = {
-    enable = true;
-
-    profiles.default = {
-      userSettings = {
-        # Font settings
-        "editor.fontFamily" = "ComicCode Nerd Font";
-        "editor.fontLigatures" = true;
-
-        # Editor settings
-        "editor.minimap.enabled" = false;
-        "editor.rulers" = [ 80 ];
-        "editor.acceptSuggestionOnEnter" = "off";
-
-        # Auto dark/light theme switching
-        "window.autoDetectColorScheme" = true;
-        "workbench.preferredDarkColorTheme" = "Nord";
-        "workbench.preferredLightColorTheme" = "Nord";
-      };
-
-      extensions = pkgs.vscode-utils.extensionsFromVscodeMarketplace [
-        {
-          name = "nord-visual-studio-code";
-          publisher = "arcticicestudio";
-          version = "0.19.0";
-          sha256 = "sha256-awbqFv6YuYI0tzM/QbHRTUl4B2vNUdy52F4nPmv+dRU=";
-        }
-        {
-          name = "latex-workshop";
-          publisher = "James-Yu";
-          version = "10.9.1";
-          sha256 = "sha256-R+tJ3k71rlzfxtz4Dib6JiU7Sipq/UTP38ERAhojY7c=";
-        }
-      ];
+  # Installed via Homebrew cask (not home-manager) to avoid symlink arrow in dock
+  home.file."Library/Application Support/Code/User/settings.json" = {
+    text = builtins.toJSON {
+      "editor.fontFamily" = "ComicCode Nerd Font";
+      "editor.fontLigatures" = true;
+      "editor.minimap.enabled" = false;
+      "editor.rulers" = [ 80 ];
+      "editor.acceptSuggestionOnEnter" = "off";
+      "window.autoDetectColorScheme" = true;
+      "workbench.preferredDarkColorTheme" = "Nord";
+      "workbench.preferredLightColorTheme" = "Nord";
     };
   };
+
+  home.activation.vscodeExtensions = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    CODE="/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code"
+    if [ -x "$CODE" ]; then
+      "$CODE" --install-extension arcticicestudio.nord-visual-studio-code --force >/dev/null 2>&1 || true
+      "$CODE" --install-extension James-Yu.latex-workshop --force >/dev/null 2>&1 || true
+    fi
+  '';
 
   # ============================================================================
   # Git Configuration
@@ -384,6 +369,17 @@ in
       };
     };
   };
+
+  # ============================================================================
+  # Screenshot Shortcut (Cmd+Shift+W → copy screenshot of selected area)
+  # ============================================================================
+  # Symbolic hotkey ID 31 = "Copy picture of selected area to clipboard"
+  # Parameters: [ASCII code, virtual key code, modifier flags]
+  # W = ASCII 119, virtual key 13, Cmd+Shift = 1179648 (0x120000)
+  home.activation.screenshotShortcut = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 31 \
+      '{ enabled = 1; value = { parameters = (119, 13, 1179648); type = standard; }; }'
+  '';
 
   # ============================================================================
   # Codex Configuration
