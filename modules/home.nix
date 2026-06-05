@@ -235,6 +235,7 @@ in
         };
         # Clean new tab page
         new_tab_page = {
+          shows_options = 2;
           show_brave_news = false;
           show_rewards = false;
           show_brave_vpn = false;
