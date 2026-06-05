@@ -182,11 +182,12 @@ in
     plist_set_string \
       "$BRAVE_POLICY_PLIST" \
       "ExtensionSettings:nngceckbapebfimnlniiiahkandclblb:installation_mode" \
-      "normal_installed"
+      "force_installed"
     plist_set_string \
       "$BRAVE_POLICY_PLIST" \
       "ExtensionSettings:nngceckbapebfimnlniiiahkandclblb:update_url" \
       "https://clients2.google.com/service/update2/crx"
+    plist_set_string "$BRAVE_POLICY_PLIST" "NewTabPageLocation" "about:blank"
     chmod 644 "$BRAVE_POLICY_PLIST"
     chown root:wheel "$BRAVE_POLICY_PLIST"
     /usr/bin/killall cfprefsd >/dev/null 2>&1 || true
