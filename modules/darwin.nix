@@ -183,9 +183,9 @@ in
     chown root:wheel "$BRAVE_POLICY_PLIST"
     /usr/bin/killall cfprefsd >/dev/null 2>&1 || true
 
-    if command -v defaultbrowser >/dev/null 2>&1; then
+    if [ -x /opt/homebrew/bin/defaultbrowser ]; then
       if [ -d "/Applications/Brave Browser.app" ]; then
-        defaultbrowser brave || warn "failed to set Brave as the default browser"
+        /opt/homebrew/bin/defaultbrowser brave || warn "failed to set Brave as the default browser"
       else
         warn "Brave Browser.app is not installed yet; skipping default browser assignment"
       fi
