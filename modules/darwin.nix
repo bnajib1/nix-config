@@ -135,6 +135,7 @@ in
       "signal"
       "brave-browser"
       "ghostty"
+      "slack"
       "mactex"
       "iina"
       "qbittorrent"

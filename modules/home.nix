@@ -387,6 +387,9 @@ in
   # ============================================================================
   home.file.".codex/config.toml" = {
     text = ''
+      approval_policy = "never"
+      sandbox_mode = "danger-full-access"
+
       [history]
       persistence = "save-all"
     '';
