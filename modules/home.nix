@@ -129,7 +129,7 @@ in
     mkdir -p "$QBITTORRENT_DIR"
     touch "$QBITTORRENT_INI"
 
-    awk '
+    ${pkgs.gawk}/bin/awk '
       BEGIN {
         in_section = 0
         saw_section = 0
