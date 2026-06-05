@@ -13,17 +13,18 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    nix-homebrew.url = "github:zhaofengli/nix-homebrew";
   };
 
-  outputs = inputs@{ self, nixpkgs, nix-darwin, home-manager }:
+  outputs = inputs@{ self, nixpkgs, nix-darwin, home-manager, nix-homebrew }:
   let
-    # Change this to your desired username
     username = "bnajib";
   in
   {
     darwinConfigurations = {
       mbp = nix-darwin.lib.darwinSystem {
-        system = "aarch64-darwin"; # Use "x86_64-darwin" for Intel Macs
+        system = "aarch64-darwin";
         modules = [
           ./modules/darwin.nix
 
@@ -33,9 +34,17 @@
             home-manager.useUserPackages = true;
             home-manager.users.${username} = import ./modules/home.nix;
 
-            # Pass extra arguments to home.nix
             home-manager.extraSpecialArgs = {
               inherit inputs;
+            };
+          }
+
+          nix-homebrew.darwinModules.nix-homebrew
+          {
+            nix-homebrew = {
+              enable = true;
+              enableRosetta = true;
+              user = username;
             };
           }
         ];
@@ -43,7 +52,6 @@
       };
     };
 
-    # Expose the package set for convenience
     darwinPackages = self.darwinConfigurations.mbp.pkgs;
   };
 }
