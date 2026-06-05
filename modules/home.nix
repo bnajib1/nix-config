@@ -347,8 +347,9 @@ in
   # ============================================================================
   # Claude Code Configuration
   # ============================================================================
-  home.file.".claude/settings.json" = {
-    text = builtins.toJSON {
+  # Written as a real file (not a symlink) so Claude Code can update it at runtime
+  home.activation.claudeCodeConfig = let
+    desired = builtins.toJSON {
       theme = "auto";
       model = "claude-opus-4-6";
       effortLevel = "max";
@@ -369,7 +370,20 @@ in
         ];
       };
     };
-  };
+  in lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    CLAUDE_DIR="$HOME/.claude"
+    CLAUDE_SETTINGS="$CLAUDE_DIR/settings.json"
+    mkdir -p "$CLAUDE_DIR"
+    if [ -L "$CLAUDE_SETTINGS" ]; then
+      rm "$CLAUDE_SETTINGS"
+    fi
+    if [ ! -f "$CLAUDE_SETTINGS" ]; then
+      printf '%s\n' '${desired}' > "$CLAUDE_SETTINGS"
+    else
+      ${pkgs.jq}/bin/jq --argjson new '${desired}' '. * $new' "$CLAUDE_SETTINGS" > "$CLAUDE_SETTINGS.tmp" \
+        && mv "$CLAUDE_SETTINGS.tmp" "$CLAUDE_SETTINGS"
+    fi
+  '';
 
   # ============================================================================
   # Screenshot Shortcut (Cmd+Shift+W → copy screenshot of selected area)
