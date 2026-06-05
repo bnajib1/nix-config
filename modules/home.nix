@@ -340,8 +340,34 @@ in
   # Additional Packages (optional)
   # ============================================================================
   home.packages = with pkgs; [
+    claude-code
     codex
     gh
     mactop
   ];
+
+  # ============================================================================
+  # Claude Code Configuration
+  # ============================================================================
+  home.file.".claude/settings.json" = {
+    text = builtins.toJSON {
+      model = "claude-opus-4-6";
+      effortLevel = "max";
+      attribution = {
+        commit = "";
+        pr = "";
+      };
+      permissions = {
+        allow = [
+          "Bash(*)"
+          "Edit(*)"
+          "Write(*)"
+          "Read(*)"
+          "WebFetch(*)"
+          "WebSearch(*)"
+          "NotebookEdit(*)"
+        ];
+      };
+    };
+  };
 }
