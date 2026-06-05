@@ -77,6 +77,9 @@ in
       AppleShowAllExtensions = true;
       # Enable dark mode based on system preference
       AppleInterfaceStyleSwitchesAutomatically = true;
+      # Mute alert beeps and volume-key feedback sounds.
+      "com.apple.sound.beep.volume" = 0.0;
+      "com.apple.sound.beep.feedback" = 0;
     };
 
     # Disable Siri
