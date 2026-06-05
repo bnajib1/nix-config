@@ -156,6 +156,9 @@ in
       xattr -d com.apple.quarantine "$app" 2>/dev/null || true
     done
 
+    # Disable startup chime
+    /usr/sbin/nvram SystemAudioVolume=%00 2>/dev/null || true
+
     # Install Rosetta if not present
     if ! /usr/bin/pgrep -q oahd 2>/dev/null; then
       softwareupdate --install-rosetta --agree-to-license 2>/dev/null || true
