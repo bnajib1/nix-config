@@ -341,8 +341,11 @@ in
   # ============================================================================
   programs.git = {
     enable = true;
-    userName = "Benjamin Najib";
-    userEmail = "202577703+bnajib1@users.noreply.github.com";
+    signing.format = null;
+    settings.user = {
+      name = "Benjamin Najib";
+      email = "202577703+bnajib1@users.noreply.github.com";
+    };
   };
 
   # ============================================================================
