@@ -82,10 +82,21 @@ in
       "com.apple.sound.beep.feedback" = 0;
     };
 
+    # Keep Tahoe Liquid Glass transparency enabled.
+    universalaccess.reduceTransparency = false;
+
     # Disable Siri
     CustomUserPreferences = {
       "NSGlobalDomain" = {
+        # Keep Tahoe's Liquid Glass renderer enabled and allow wallpaper tinting.
+        "com.apple.SwiftUI.DisableSolarium" = false;
+        AppleReduceDesktopTinting = false;
         NSAutomaticEmojiSubstitutionEnabled = false;
+      };
+      "com.apple.Accessibility" = {
+        # Keep Liquid Glass contrast at the normal system appearance.
+        DarkenSystemColors = false;
+        EnhancedBackgroundContrastEnabled = false;
       };
       "com.apple.assistant.support" = {
         "Assistant Enabled" = false;
