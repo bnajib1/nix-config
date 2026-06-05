@@ -194,9 +194,12 @@ in
     chown root:wheel "$BRAVE_POLICY_PLIST"
     /usr/bin/killall cfprefsd >/dev/null 2>&1 || true
 
-    # Run as the user so Launch Services sees Brave as an HTTP handler
+    # Register Brave with Launch Services so it appears as an HTTP handler,
+    # then set it as the default browser (must run as the user)
     if [ -x /opt/homebrew/bin/defaultbrowser ]; then
       if [ -d "/Applications/Brave Browser.app" ]; then
+        LSREGISTER="/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister"
+        sudo -u ${username} "$LSREGISTER" -f "/Applications/Brave Browser.app" 2>/dev/null || true
         sudo -u ${username} /opt/homebrew/bin/defaultbrowser brave \
           || warn "failed to set Brave as the default browser"
       else

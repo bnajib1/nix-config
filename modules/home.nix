@@ -377,7 +377,7 @@ in
   # Parameters: [ASCII code, virtual key code, modifier flags]
   # W = ASCII 119, virtual key 13, Cmd+Shift = 1179648 (0x120000)
   home.activation.screenshotShortcut = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 31 \
+    /usr/bin/defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 31 \
       '{ enabled = 1; value = { parameters = (119, 13, 1179648); type = standard; }; }'
   '';
 
