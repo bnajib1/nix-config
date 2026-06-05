@@ -6,14 +6,8 @@ let
 in
 
 {
-  # Nix configuration
-  nix = {
-    settings = {
-      experimental-features = [ "nix-command" "flakes" ];
-      # Automatically optimize nix store
-      auto-optimise-store = true;
-    };
-  };
+  # Let Determinate manage the Nix daemon and settings
+  nix.enable = false;
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
