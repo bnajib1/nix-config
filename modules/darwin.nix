@@ -210,76 +210,82 @@ in
     # Set default apps using native Launch Services API
     CODE_APP="$CODE_APP" BRAVE_APP="$BRAVE_APP" IINA_APP="$IINA_APP" /usr/bin/swift - <<'SWIFT' \
       || warn "failed to update default app handlers"
-    import Foundation
+    import AppKit
     import CoreServices
-
-    struct Mapping {
-      let isInstalled: Bool
-      let label: String
-      let bundleIdentifier: String
-      let contentTypes: [String]
-    }
+    import Foundation
+    import UniformTypeIdentifiers
 
     func warn(_ message: String) {
       FileHandle.standardError.write(Data(("warning: \(message)\n").utf8))
     }
 
-    let environment = ProcessInfo.processInfo.environment
+    func setHandler(bundleId: String, uti: String) -> Bool {
+      let status = LSSetDefaultRoleHandlerForContentType(
+        uti as CFString, LSRolesMask.all, bundleId as CFString
+      )
+      return status == noErr
+    }
 
-    let videoTypes = [
-      "public.movie",
-      "public.video",
-      "public.avi",
-      "public.mpeg",
-      "public.mpeg-4",
-      "com.apple.quicktime-movie",
-      "public.3gpp",
-      "public.3gpp2",
-      "org.matroska.mkv",
-      "com.microsoft.windows-media-wmv"
+    let env = ProcessInfo.processInfo.environment
+
+    struct Mapping {
+      let isInstalled: Bool
+      let label: String
+      let bundleId: String
+      let utis: [String]
+      let extensions: [String]
+    }
+
+    let videoUTIs = [
+      "public.movie", "public.video", "public.avi",
+      "public.mpeg", "public.mpeg-4", "com.apple.quicktime-movie",
+      "public.3gpp", "public.3gpp2", "com.microsoft.windows-media-wmv"
     ]
+    let videoExtensions = ["mkv", "webm", "flv", "wmv"]
 
     let mappings = [
       Mapping(
-        isInstalled: environment["CODE_APP"] == "1",
+        isInstalled: env["CODE_APP"] == "1",
         label: "Visual Studio Code",
-        bundleIdentifier: "com.microsoft.VSCode",
-        contentTypes: [
-          "net.daringfireball.markdown",
-          "public.comma-separated-values-text"
-        ]
+        bundleId: "com.microsoft.VSCode",
+        utis: ["net.daringfireball.markdown", "public.comma-separated-values-text"],
+        extensions: []
       ),
       Mapping(
-        isInstalled: environment["BRAVE_APP"] == "1",
+        isInstalled: env["BRAVE_APP"] == "1",
         label: "Brave Browser",
-        bundleIdentifier: "com.brave.Browser",
-        contentTypes: [ "com.adobe.pdf" ]
+        bundleId: "com.brave.Browser",
+        utis: ["com.adobe.pdf"],
+        extensions: []
       ),
       Mapping(
-        isInstalled: environment["IINA_APP"] == "1",
+        isInstalled: env["IINA_APP"] == "1",
         label: "IINA",
-        bundleIdentifier: "com.colliderli.iina",
-        contentTypes: videoTypes
+        bundleId: "com.colliderli.iina",
+        utis: videoUTIs,
+        extensions: videoExtensions
       )
     ]
 
-    for mapping in mappings {
-      guard mapping.isInstalled else {
-        warn("\(mapping.label) is not installed yet; skipping default handler assignment")
+    for m in mappings {
+      guard m.isInstalled else {
+        warn("\(m.label) is not installed yet; skipping default handler assignment")
         continue
       }
 
-      for contentType in mapping.contentTypes {
-        let status = LSSetDefaultRoleHandlerForContentType(
-          contentType as CFString,
-          LSRolesMask.all,
-          mapping.bundleIdentifier as CFString
-        )
-        if status != noErr {
-          warn(
-            "failed to set \(mapping.label) as the default handler for \(contentType) " +
-            "(OSStatus \(status))"
-          )
+      for uti in m.utis {
+        if !setHandler(bundleId: m.bundleId, uti: uti) {
+          warn("failed to set \(m.label) as handler for \(uti)")
+        }
+      }
+
+      for ext in m.extensions {
+        if let resolved = UTType(filenameExtension: ext) {
+          if !setHandler(bundleId: m.bundleId, uti: resolved.identifier) {
+            warn("failed to set \(m.label) as handler for .\(ext) (\(resolved.identifier))")
+          }
+        } else {
+          warn("no UTI found for .\(ext); skipping")
         }
       }
     }
