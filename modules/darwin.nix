@@ -145,6 +145,11 @@ in
 
   # Set default applications for file types
   system.activationScripts.postActivation.text = ''
+    # Install Rosetta if not present
+    if ! /usr/bin/pgrep -q oahd 2>/dev/null; then
+      softwareupdate --install-rosetta --agree-to-license 2>/dev/null || true
+    fi
+
     warn() {
       printf 'warning: %s\n' "$1" >&2
     }
