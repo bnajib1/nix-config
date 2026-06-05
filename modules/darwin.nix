@@ -124,6 +124,7 @@ in
   # Homebrew integration
   homebrew = {
     enable = true;
+    caskArgs.no_quarantine = true;
     onActivation = {
       autoUpdate = true;
       cleanup = "zap";
@@ -145,6 +146,10 @@ in
 
   # Set default applications for file types
   system.activationScripts.postActivation.text = ''
+    # Strip quarantine flags from Homebrew-installed apps
+    find /Applications -maxdepth 1 -name '*.app' -xattr com.apple.quarantine \
+      -exec xattr -d com.apple.quarantine {} \; 2>/dev/null || true
+
     # Install Rosetta if not present
     if ! /usr/bin/pgrep -q oahd 2>/dev/null; then
       softwareupdate --install-rosetta --agree-to-license 2>/dev/null || true
