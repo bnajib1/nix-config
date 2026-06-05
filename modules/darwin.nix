@@ -18,6 +18,11 @@ in
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
+  # Hostname
+  networking.hostName = "mbp";
+  networking.computerName = "mbp";
+  networking.localHostName = "mbp";
+
   # System packages available to all users
   environment.systemPackages = with pkgs; [
     git

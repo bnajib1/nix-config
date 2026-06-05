@@ -22,8 +22,7 @@
   in
   {
     darwinConfigurations = {
-      # Change "macbook" to your hostname (run `hostname` to find it)
-      macbook = nix-darwin.lib.darwinSystem {
+      mbp = nix-darwin.lib.darwinSystem {
         system = "aarch64-darwin"; # Use "x86_64-darwin" for Intel Macs
         modules = [
           ./modules/darwin.nix
@@ -45,6 +44,6 @@
     };
 
     # Expose the package set for convenience
-    darwinPackages = self.darwinConfigurations.macbook.pkgs;
+    darwinPackages = self.darwinConfigurations.mbp.pkgs;
   };
 }
