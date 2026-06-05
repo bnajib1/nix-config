@@ -119,6 +119,9 @@ in
       "com.colliderli.iina" = {
         quitWhenNoOpenedWindow = true;
       };
+      "com.apple.tips" = {
+        TPSAppAllowNotifications = false;
+      };
       # Remove Downloads folder from dock (Trash stays — it's hardcoded by macOS)
       "com.apple.dock" = {
         persistent-others = [];
