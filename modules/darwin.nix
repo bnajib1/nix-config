@@ -156,8 +156,8 @@ in
       xattr -d com.apple.quarantine "$app" 2>/dev/null || true
     done
 
-    # Disable startup chime
-    /usr/sbin/nvram SystemAudioVolume=%00 2>/dev/null || true
+    # Disable startup chime (Apple Silicon)
+    /usr/sbin/nvram StartupMute=%01 2>/dev/null || true
 
     # Install Rosetta if not present
     if ! /usr/bin/pgrep -q oahd 2>/dev/null; then
@@ -197,6 +197,12 @@ in
       "$BRAVE_POLICY_PLIST" \
       "ExtensionSettings:nngceckbapebfimnlniiiahkandclblb:toolbar_pin" \
       "force_pinned"
+    # Force Google as default search engine (normal + private)
+    /usr/libexec/PlistBuddy -c "Delete :DefaultSearchProviderEnabled" "$BRAVE_POLICY_PLIST" 2>/dev/null || true
+    /usr/libexec/PlistBuddy -c "Add :DefaultSearchProviderEnabled bool true" "$BRAVE_POLICY_PLIST"
+    plist_set_string "$BRAVE_POLICY_PLIST" "DefaultSearchProviderName" "Google"
+    plist_set_string "$BRAVE_POLICY_PLIST" "DefaultSearchProviderSearchURL" "https://www.google.com/search?q={searchTerms}"
+    plist_set_string "$BRAVE_POLICY_PLIST" "DefaultSearchProviderKeyword" "google.com"
     chmod 644 "$BRAVE_POLICY_PLIST"
     chown root:wheel "$BRAVE_POLICY_PLIST"
     /usr/bin/killall cfprefsd >/dev/null 2>&1 || true
