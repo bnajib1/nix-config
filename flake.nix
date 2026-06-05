@@ -18,7 +18,7 @@
   outputs = inputs@{ self, nixpkgs, nix-darwin, home-manager }:
   let
     # Change this to your desired username
-    username = "benjaminnajib";
+    username = "bnajib";
   in
   {
     darwinConfigurations = {
