@@ -150,6 +150,22 @@ in
       softwareupdate --install-rosetta --agree-to-license 2>/dev/null || true
     fi
 
+    # Remap "Copy picture of selected area to clipboard" to Cmd+Shift+W
+    defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add "31" \
+      '<dict>
+        <key>enabled</key><true/>
+        <key>value</key>
+        <dict>
+          <key>parameters</key>
+          <array>
+            <integer>119</integer>
+            <integer>13</integer>
+            <integer>1179648</integer>
+          </array>
+          <key>type</key><string>standard</string>
+        </dict>
+      </dict>'
+
     warn() {
       printf 'warning: %s\n' "$1" >&2
     }
@@ -241,7 +257,7 @@ in
       "public.mpeg", "public.mpeg-4", "com.apple.quicktime-movie",
       "public.3gpp", "public.3gpp2", "com.microsoft.windows-media-wmv"
     ]
-    let videoExtensions = ["mkv", "webm", "flv", "wmv"]
+    let videoExtensions = ["mkv", "flv", "wmv"]
 
     let mappings = [
       Mapping(
