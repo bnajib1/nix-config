@@ -156,6 +156,9 @@ in
       xattr -d com.apple.quarantine "$app" 2>/dev/null || true
     done
 
+    # Enable developer tools mode (suppresses TCC prompts for terminal apps)
+    /usr/sbin/DevToolsSecurity -enable 2>/dev/null || true
+
     # Disable startup chime (Apple Silicon)
     /usr/sbin/nvram StartupMute=%01 2>/dev/null || true
 
