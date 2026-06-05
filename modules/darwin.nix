@@ -23,11 +23,6 @@ in
   networking.computerName = "mbp";
   networking.localHostName = "mbp";
 
-  # System packages available to all users
-  environment.systemPackages = with pkgs; [
-    git
-  ];
-
   # Create /etc/zshrc that loads nix-darwin environment
   programs.zsh.enable = true;
 

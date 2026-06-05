@@ -337,6 +337,15 @@ in
   };
 
   # ============================================================================
+  # Git Configuration
+  # ============================================================================
+  programs.git = {
+    enable = true;
+    userName = "Benjamin Najib";
+    userEmail = "202577703+bnajib1@users.noreply.github.com";
+  };
+
+  # ============================================================================
   # Additional Packages (optional)
   # ============================================================================
   home.packages = with pkgs; [
@@ -351,8 +360,10 @@ in
   # ============================================================================
   home.file.".claude/settings.json" = {
     text = builtins.toJSON {
+      theme = "auto";
       model = "claude-opus-4-6";
       effortLevel = "max";
+      cleanupPeriodDays = 36500;
       attribution = {
         commit = "";
         pr = "";
@@ -369,5 +380,15 @@ in
         ];
       };
     };
+  };
+
+  # ============================================================================
+  # Codex Configuration
+  # ============================================================================
+  home.file.".codex/config.toml" = {
+    text = ''
+      [history]
+      persistence = "save-all"
+    '';
   };
 }
