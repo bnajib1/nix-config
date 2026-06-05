@@ -355,7 +355,7 @@ in
     claude-code
     codex
     gh
-    mactop
+    (mactop.overrideAttrs { doCheck = false; })
   ];
 
   # ============================================================================
