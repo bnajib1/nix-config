@@ -377,6 +377,17 @@ in
   # Parameters: [ASCII code, virtual key code, modifier flags]
   # W = ASCII 119, virtual key 13, Cmd+Shift = 1179648 (0x120000)
   home.activation.screenshotShortcut = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    # All four screenshot hotkeys must be present for macOS to honor custom bindings.
+    # 28 = save screen to file (Cmd+Shift+3)
+    /usr/bin/defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 28 \
+      '{ enabled = 1; value = { parameters = (51, 20, 1179648); type = standard; }; }'
+    # 29 = copy screen to clipboard (Ctrl+Cmd+Shift+3)
+    /usr/bin/defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 29 \
+      '{ enabled = 1; value = { parameters = (51, 20, 1441792); type = standard; }; }'
+    # 30 = save selected area to file (Cmd+Shift+4)
+    /usr/bin/defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 30 \
+      '{ enabled = 1; value = { parameters = (52, 21, 1179648); type = standard; }; }'
+    # 31 = copy selected area to clipboard (remapped to Cmd+Shift+W)
     /usr/bin/defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 31 \
       '{ enabled = 1; value = { parameters = (119, 13, 1179648); type = standard; }; }'
     /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
