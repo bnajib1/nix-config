@@ -430,40 +430,7 @@ in
     /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u || true
   '';
 
-  # ============================================================================
-  # Dark Mode Toggle (Ctrl+Option+Cmd+T)
-  # ============================================================================
-  # Compiled native Swift binary — no third-party dependencies
-  home.activation.darkModeToggle = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    mkdir -p "$HOME/.local/bin"
-    SWIFT_SRC="$(mktemp /tmp/dark-mode-toggle.XXXXXX.swift)"
-    cat > "$SWIFT_SRC" <<'SWIFT'
-    import Cocoa
-    let app = NSApplication.shared
-    app.setActivationPolicy(.accessory)
-    NSEvent.addGlobalMonitorForEvents(matching: .keyDown) { event in
-        let flags = event.modifierFlags.intersection(.deviceIndependentFlagsMask)
-        if flags.contains([.control, .option, .command]) && event.keyCode == 17 {
-            NSAppleScript(source: "tell application \"System Events\" to tell appearance preferences to set dark mode to not dark mode")?.executeAndReturnError(nil)
-        }
-    }
-    app.run()
-    SWIFT
-    /usr/bin/swiftc -O -o "$HOME/.local/bin/dark-mode-toggle" -framework Cocoa "$SWIFT_SRC" 2>/dev/null || true
-    rm -f "$SWIFT_SRC"
-    launchctl bootout gui/$(id -u) "$HOME/Library/LaunchAgents/com.user.dark-mode-toggle.plist" 2>/dev/null || true
-    launchctl bootstrap gui/$(id -u) "$HOME/Library/LaunchAgents/com.user.dark-mode-toggle.plist" 2>/dev/null || true
-  '';
 
-  launchd.agents.dark-mode-toggle = {
-    enable = true;
-    config = {
-      ProgramArguments = [ "/Users/bnajib/.local/bin/dark-mode-toggle" ];
-      KeepAlive = true;
-      RunAtLoad = true;
-      Label = "com.user.dark-mode-toggle";
-    };
-  };
 
   # ============================================================================
   # Codex Configuration
