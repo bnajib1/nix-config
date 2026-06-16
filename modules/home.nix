@@ -111,8 +111,63 @@ in
   home.file."Library/Application Support/com.mitchellh.ghostty/config" = {
     text = ''
       font-family = ComicCode Nerd Font
-      theme = light:Gruvbox Material Light,dark:Gruvbox Material Dark
+      theme = light:gruvbox-material-light-soft,dark:gruvbox-material-dark-soft
       auto-update = check
+    '';
+  };
+
+  # Gruvbox Material Soft contrast themes (not bundled with Ghostty)
+  home.file.".config/ghostty/themes/gruvbox-material-dark-soft" = {
+    text = ''
+      palette = 0=#32302f
+      palette = 1=#ea6962
+      palette = 2=#a9b665
+      palette = 3=#d8a657
+      palette = 4=#7daea3
+      palette = 5=#d3869b
+      palette = 6=#89b482
+      palette = 7=#d4be98
+      palette = 8=#7c6f64
+      palette = 9=#ea6962
+      palette = 10=#a9b665
+      palette = 11=#d8a657
+      palette = 12=#7daea3
+      palette = 13=#d3869b
+      palette = 14=#89b482
+      palette = 15=#ddc7a1
+      background = #32302f
+      foreground = #d4be98
+      cursor-color = #d4be98
+      cursor-text = #32302f
+      selection-background = #d4be98
+      selection-foreground = #32302f
+    '';
+  };
+
+  home.file.".config/ghostty/themes/gruvbox-material-light-soft" = {
+    text = ''
+      palette = 0=#f2e5bc
+      palette = 1=#c14a4a
+      palette = 2=#6c782e
+      palette = 3=#b47109
+      palette = 4=#45707a
+      palette = 5=#945e80
+      palette = 6=#4c7a5d
+      palette = 7=#654735
+      palette = 8=#a89984
+      palette = 9=#c14a4a
+      palette = 10=#6c782e
+      palette = 11=#b47109
+      palette = 12=#45707a
+      palette = 13=#945e80
+      palette = 14=#4c7a5d
+      palette = 15=#4f3829
+      background = #f2e5bc
+      foreground = #654735
+      cursor-color = #654735
+      cursor-text = #f2e5bc
+      selection-background = #654735
+      selection-foreground = #f2e5bc
     '';
   };
 
@@ -309,8 +364,8 @@ in
       "editor.rulers" = [ 80 ];
       "editor.acceptSuggestionOnEnter" = "off";
       "window.autoDetectColorScheme" = true;
-      "workbench.preferredDarkColorTheme" = "Gruvbox Material Dark";
-      "workbench.preferredLightColorTheme" = "Gruvbox Material Light";
+      "workbench.preferredDarkColorTheme" = "Gruvbox Material Dark Soft";
+      "workbench.preferredLightColorTheme" = "Gruvbox Material Light Soft";
     };
   };
 
