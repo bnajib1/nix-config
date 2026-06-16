@@ -111,7 +111,7 @@ in
   home.file."Library/Application Support/com.mitchellh.ghostty/config" = {
     text = ''
       font-family = ComicCode Nerd Font
-      theme = Nord
+      theme = light:Gruvbox Material Light,dark:Gruvbox Material Dark
       auto-update = check
     '';
   };
@@ -309,15 +309,15 @@ in
       "editor.rulers" = [ 80 ];
       "editor.acceptSuggestionOnEnter" = "off";
       "window.autoDetectColorScheme" = true;
-      "workbench.preferredDarkColorTheme" = "Nord";
-      "workbench.preferredLightColorTheme" = "Nord";
+      "workbench.preferredDarkColorTheme" = "Gruvbox Material Dark";
+      "workbench.preferredLightColorTheme" = "Gruvbox Material Light";
     };
   };
 
   home.activation.vscodeExtensions = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     CODE="/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code"
     if [ -x "$CODE" ]; then
-      "$CODE" --install-extension arcticicestudio.nord-visual-studio-code --force >/dev/null 2>&1 || true
+      "$CODE" --install-extension sainnhe.gruvbox-material --force >/dev/null 2>&1 || true
       "$CODE" --install-extension James-Yu.latex-workshop --force >/dev/null 2>&1 || true
     fi
   '';
@@ -383,6 +383,18 @@ in
       ${pkgs.jq}/bin/jq --argjson new '${desired}' '. * $new' "$CLAUDE_SETTINGS" > "$CLAUDE_SETTINGS.tmp" \
         && mv "$CLAUDE_SETTINGS.tmp" "$CLAUDE_SETTINGS"
     fi
+
+    # Pre-accept workspace trust in the global config so the dialog doesn't
+    # appear on every launch
+    CLAUDE_GLOBAL="$HOME/.claude.json"
+    if [ -f "$CLAUDE_GLOBAL" ]; then
+      ${pkgs.jq}/bin/jq '
+        .projects //= {} |
+        .projects["/Users/'"$USER"'"] //= {} |
+        .projects["/Users/'"$USER"'"].hasTrustDialogAccepted = true
+      ' "$CLAUDE_GLOBAL" > "$CLAUDE_GLOBAL.tmp" \
+        && mv "$CLAUDE_GLOBAL.tmp" "$CLAUDE_GLOBAL"
+    fi
   '';
 
   # ============================================================================
@@ -421,13 +433,20 @@ in
   # ============================================================================
   # Codex Configuration
   # ============================================================================
-  home.file.".codex/config.toml" = {
-    text = ''
-      approval_policy = "never"
-      sandbox_mode = "danger-full-access"
+  # Written as a real file (not a symlink) so Codex can write trust state at runtime
+  home.activation.codexConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    CODEX_DIR="$HOME/.codex"
+    CODEX_CONFIG="$CODEX_DIR/config.toml"
+    mkdir -p "$CODEX_DIR"
+    if [ -L "$CODEX_CONFIG" ]; then
+      rm "$CODEX_CONFIG"
+    fi
+    cat > "$CODEX_CONFIG" <<'TOML'
+approval_policy = "never"
+sandbox_mode = "danger-full-access"
 
-      [history]
-      persistence = "save-all"
-    '';
-  };
+[history]
+persistence = "save-all"
+TOML
+  '';
 }

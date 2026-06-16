@@ -146,6 +146,8 @@ in
       "iina"
       "qbittorrent"
       "protonvpn"
+      "tailscale"
+      "wispr-flow"
     ];
   };
 
