@@ -148,7 +148,6 @@ in
       "protonvpn"
       "tailscale"
       "wispr-flow"
-      "hammerspoon"
     ];
   };
 

@@ -431,25 +431,38 @@ in
   '';
 
   # ============================================================================
-  # Hammerspoon Configuration (global hotkeys)
+  # Dark Mode Toggle (Ctrl+Option+Cmd+T)
   # ============================================================================
-  home.file.".hammerspoon/init.lua" = {
-    text = ''
-      -- Hide dock icon and menu bar
-      hs.dockicon.hide()
-      hs.autoLaunch(true)
+  # Compiled native Swift binary — no third-party dependencies
+  home.activation.darkModeToggle = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    mkdir -p "$HOME/.local/bin"
+    SWIFT_SRC="$(mktemp /tmp/dark-mode-toggle.XXXXXX.swift)"
+    cat > "$SWIFT_SRC" <<'SWIFT'
+    import Cocoa
+    let app = NSApplication.shared
+    app.setActivationPolicy(.accessory)
+    NSEvent.addGlobalMonitorForEvents(matching: .keyDown) { event in
+        let flags = event.modifierFlags.intersection(.deviceIndependentFlagsMask)
+        if flags.contains([.control, .option, .command]) && event.keyCode == 17 {
+            NSAppleScript(source: "tell application \"System Events\" to tell appearance preferences to set dark mode to not dark mode")?.executeAndReturnError(nil)
+        }
+    }
+    app.run()
+    SWIFT
+    /usr/bin/swiftc -O -o "$HOME/.local/bin/dark-mode-toggle" -framework Cocoa "$SWIFT_SRC" 2>/dev/null || true
+    rm -f "$SWIFT_SRC"
+    launchctl bootout gui/$(id -u) "$HOME/Library/LaunchAgents/com.user.dark-mode-toggle.plist" 2>/dev/null || true
+    launchctl bootstrap gui/$(id -u) "$HOME/Library/LaunchAgents/com.user.dark-mode-toggle.plist" 2>/dev/null || true
+  '';
 
-      -- Ctrl+Option+Cmd+T: toggle dark mode
-      hs.hotkey.bind({"ctrl", "alt", "cmd"}, "T", function()
-        hs.osascript.applescript([[
-          tell application "System Events"
-            tell appearance preferences
-              set dark mode to not dark mode
-            end tell
-          end tell
-        ]])
-      end)
-    '';
+  launchd.agents.dark-mode-toggle = {
+    enable = true;
+    config = {
+      ProgramArguments = [ "/Users/bnajib/.local/bin/dark-mode-toggle" ];
+      KeepAlive = true;
+      RunAtLoad = true;
+      Label = "com.user.dark-mode-toggle";
+    };
   };
 
   # ============================================================================
