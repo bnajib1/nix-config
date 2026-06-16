@@ -431,6 +431,131 @@ in
   '';
 
   # ============================================================================
+  # Dark Mode Toggle (Ctrl+Option+Cmd+T)
+  # ============================================================================
+  home.activation.darkModeToggle = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    WORKFLOW_DIR="$HOME/Library/Services/Toggle Dark Mode.workflow"
+    mkdir -p "$WORKFLOW_DIR/Contents"
+
+    # Create the Automator workflow that runs AppleScript to toggle dark mode
+    cat > "$WORKFLOW_DIR/Contents/document.wflow" <<'WFLOW'
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>AMApplicationBuild</key>
+	<string>523</string>
+	<key>AMApplicationVersion</key>
+	<string>2.10</string>
+	<key>AMDocumentVersion</key>
+	<string>2</string>
+	<key>actions</key>
+	<array>
+		<dict>
+			<key>action</key>
+			<dict>
+				<key>AMAccepts</key>
+				<dict>
+					<key>Container</key>
+					<string>List</string>
+					<key>Optional</key>
+					<true/>
+					<key>Types</key>
+					<array>
+						<string>com.apple.cocoa.string</string>
+					</array>
+				</dict>
+				<key>AMActionVersion</key>
+				<string>1.0.2</string>
+				<key>AMApplication</key>
+				<array>
+					<string>Automator</string>
+				</array>
+				<key>AMCategoryIdentifier</key>
+				<string>AMCat_Utilities</string>
+				<key>AMIconName</key>
+				<string>Run_AppleScript</string>
+				<key>AMParameterProperties</key>
+				<dict>
+					<key>source</key>
+					<dict/>
+				</dict>
+				<key>AMProvides</key>
+				<dict>
+					<key>Container</key>
+					<string>List</string>
+					<key>Types</key>
+					<array>
+						<string>com.apple.cocoa.string</string>
+					</array>
+				</dict>
+				<key>ActionBundlePath</key>
+				<string>/System/Library/Automator/Run AppleScript.action</string>
+				<key>ActionName</key>
+				<string>Run AppleScript</string>
+				<key>ActionParameters</key>
+				<dict>
+					<key>source</key>
+					<string>on run {input, parameters}
+	tell application "System Events"
+		tell appearance preferences
+			set dark mode to not dark mode
+		end tell
+	end tell
+	return input
+end run</string>
+				</dict>
+				<key>BundleIdentifier</key>
+				<string>com.apple.Automator.RunScript</string>
+				<key>CFBundleVersion</key>
+				<string>1.0.2</string>
+				<key>CanShowSelectedItemsWhenRun</key>
+				<false/>
+				<key>CanShowWhenRun</key>
+				<true/>
+				<key>Category</key>
+				<array>
+					<string>AMCat_Utilities</string>
+				</array>
+				<key>Class Name</key>
+				<string>RunScriptAction</string>
+				<key>InputUUID</key>
+				<string>00000000-0000-0000-0000-000000000000</string>
+				<key>Keywords</key>
+				<array>
+					<string>Run</string>
+				</array>
+				<key>OutputUUID</key>
+				<string>00000000-0000-0000-0000-000000000001</string>
+				<key>UUID</key>
+				<string>00000000-0000-0000-0000-000000000002</string>
+				<key>UnlocalizedApplications</key>
+				<array>
+					<string>Automator</string>
+				</array>
+			</dict>
+		</dict>
+	</array>
+	<key>connectors</key>
+	<dict/>
+	<key>workflowMetaData</key>
+	<dict>
+		<key>workflowTypeIdentifier</key>
+		<string>com.apple.Automator.servicesMenu</string>
+	</dict>
+</dict>
+</plist>
+WFLOW
+
+    # Bind Ctrl+Option+Cmd+T to the service
+    # Modifier flags: Ctrl=262144 + Option=524288 + Cmd=1048576 = 1835008
+    # Adding @ prefix enables it
+    /usr/bin/defaults write pbs NSServicesStatus \
+      -dict-add '"(null) - Toggle Dark Mode - runWorkflowAsService"' \
+      '{ "enabled_context_menu" = 1; "enabled_services_menu" = 1; "key_equivalent" = "@^~t"; }'
+  '';
+
+  # ============================================================================
   # Codex Configuration
   # ============================================================================
   # Written as a real file (not a symlink) so Codex can write trust state at runtime
