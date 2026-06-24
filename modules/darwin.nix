@@ -146,7 +146,7 @@ in
       "iina"
       "qbittorrent"
       "protonvpn"
-      "tailscale"
+      "tailscale-app"
       "wispr-flow"
       "skim"
     ];
