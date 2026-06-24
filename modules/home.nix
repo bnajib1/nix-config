@@ -90,7 +90,7 @@ in
   # ============================================================================
   # Current macOS placement: Crop, with the stored fill color preserved.
   home.file.${wallpaperTarget} = {
-    source = ../wallpapers/grünes_feld.jpg;
+    source = ../wallpapers + "/grünes_feld.jpg";
   };
 
   launchd.agents.apply-wallpaper = {
