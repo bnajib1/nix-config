@@ -1,7 +1,7 @@
 { config, pkgs, lib, ... }:
 
 let
-  wallpaperTarget = "Pictures/Wallpapers/wallpaper.jpg";
+  wallpaperTarget = "Pictures/Wallpapers/grünes_feld.jpg";
   applyWallpaper = pkgs.writeShellScript "apply-wallpaper" ''
     set -eu
 
@@ -90,7 +90,7 @@ in
   # ============================================================================
   # Current macOS placement: Crop, with the stored fill color preserved.
   home.file.${wallpaperTarget} = {
-    source = ../wallpapers/wallpaper.jpg;
+    source = ../wallpapers/grünes_feld.jpg;
   };
 
   launchd.agents.apply-wallpaper = {
