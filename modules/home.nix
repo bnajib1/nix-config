@@ -409,6 +409,7 @@ in
       model = "claude-opus-4-6";
       effortLevel = "max";
       cleanupPeriodDays = 36500;
+      disableArtifact = true;
       attribution = {
         commit = "";
         pr = "";
