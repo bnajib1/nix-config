@@ -86,6 +86,13 @@ in
     # Show seconds in menu bar clock
     menuExtraClock.ShowSeconds = true;
 
+    # Trackpad: light click force
+    trackpad = {
+      FirstClickThreshold = 0;
+      SecondClickThreshold = 0;
+      ActuationStrength = 0;
+    };
+
     CustomUserPreferences = {
       "NSGlobalDomain" = {
         # Keep Tahoe's Liquid Glass renderer enabled and allow wallpaper tinting.
