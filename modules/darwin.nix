@@ -154,7 +154,6 @@ in
       "protonvpn"
       "tailscale-app"
       "wispr-flow"
-      "skim"
     ];
   };
 
@@ -252,13 +251,9 @@ in
     if [ -d "/Applications/IINA.app" ]; then
       IINA_APP=1
     fi
-    SKIM_APP=0
-    if [ -d "/Applications/Skim.app" ]; then
-      SKIM_APP=1
-    fi
 
     # Set default apps using native Launch Services API
-    CODE_APP="$CODE_APP" BRAVE_APP="$BRAVE_APP" IINA_APP="$IINA_APP" SKIM_APP="$SKIM_APP" /usr/bin/swift - <<'SWIFT' \
+    CODE_APP="$CODE_APP" BRAVE_APP="$BRAVE_APP" IINA_APP="$IINA_APP" /usr/bin/swift - <<'SWIFT' \
       || warn "failed to update default app handlers"
     import AppKit
     import CoreServices
@@ -302,9 +297,9 @@ in
         extensions: []
       ),
       Mapping(
-        isInstalled: env["SKIM_APP"] == "1",
-        label: "Skim",
-        bundleId: "net.sourceforge.skim-app.skim",
+        isInstalled: env["BRAVE_APP"] == "1",
+        label: "Brave Browser",
+        bundleId: "com.brave.Browser",
         utis: ["com.adobe.pdf"],
         extensions: []
       ),
