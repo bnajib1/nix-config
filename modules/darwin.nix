@@ -157,8 +157,10 @@ in
     ];
   };
 
-  # Set default applications for file types
+  # Install custom fonts to /Library/Fonts (system-wide, visible to Ghostty)
   system.activationScripts.postActivation.text = ''
+    cp ${../fonts/ComicCodeNerdFont-Regular.otf} /Library/Fonts/ComicCodeNerdFont-Regular.otf 2>/dev/null || true
+
     # Strip quarantine flags from Homebrew-installed apps
     for app in /Applications/*.app; do
       xattr -d com.apple.quarantine "$app" 2>/dev/null || true
