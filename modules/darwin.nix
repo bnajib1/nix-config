@@ -44,7 +44,6 @@ in
         "/Applications/Brave Browser.app"
         "/System/Applications/Calendar.app"
         "/System/Applications/Notes.app"
-        "/Applications/Signal.app"
         "/Applications/Slack.app"
         "/Applications/Ghostty.app"
         "/System/Applications/System Settings.app"
