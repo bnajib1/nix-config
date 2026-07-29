@@ -16,6 +16,9 @@ in
   networking.hostName = "mbp";
   networking.computerName = "mbp";
   networking.localHostName = "mbp";
+  networking.hosts = {
+    "127.0.0.1" = [ "x.com" "www.x.com" "twitter.com" "www.twitter.com" ];
+  };
 
   # Create /etc/zshrc that loads nix-darwin environment
   programs.zsh.enable = true;
