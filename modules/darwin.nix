@@ -16,9 +16,6 @@ in
   networking.hostName = "mbp";
   networking.computerName = "mbp";
   networking.localHostName = "mbp";
-  networking.hosts = {
-    "127.0.0.1" = [ "x.com" "www.x.com" "twitter.com" "www.twitter.com" ];
-  };
 
   # Create /etc/zshrc that loads nix-darwin environment
   programs.zsh.enable = true;
@@ -163,6 +160,11 @@ in
   # Install custom fonts to /Library/Fonts (system-wide, visible to Ghostty)
   system.activationScripts.postActivation.text = ''
     cp ${../fonts/ComicCodeNerdFont-Regular.otf} /Library/Fonts/ComicCodeNerdFont-Regular.otf 2>/dev/null || true
+
+    # Block distracting sites via /etc/hosts
+    for host in x.com www.x.com twitter.com www.twitter.com; do
+      grep -qF "$host" /etc/hosts 2>/dev/null || printf '127.0.0.1 %s\n' "$host" >> /etc/hosts
+    done
 
     # Strip quarantine flags from Homebrew-installed apps
     for app in /Applications/*.app; do
