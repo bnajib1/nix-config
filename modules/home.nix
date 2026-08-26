@@ -363,6 +363,7 @@ in
       "editor.minimap.enabled" = false;
       "editor.rulers" = [ 80 ];
       "editor.acceptSuggestionOnEnter" = "off";
+      "dev.containers.dockerPath" = "/Applications/Docker.app/Contents/Resources/bin/docker";
       "window.autoDetectColorScheme" = true;
       "workbench.preferredDarkColorTheme" = "Gruvbox Material Dark Soft";
       "workbench.preferredLightColorTheme" = "Gruvbox Material Light Soft";
@@ -373,7 +374,10 @@ in
     CODE="/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code"
     if [ -x "$CODE" ]; then
       "$CODE" --install-extension sainnhe.gruvbox-material --force >/dev/null 2>&1 || true
-      "$CODE" --install-extension James-Yu.latex-workshop --force >/dev/null 2>&1 || true
+      "$CODE" --install-extension james-yu.latex-workshop --force >/dev/null 2>&1 || true
+      "$CODE" --install-extension ms-vscode-remote.remote-containers --force >/dev/null 2>&1 || true
+    else
+      printf 'warning: Visual Studio Code is unavailable; skipping extension installation\n' >&2
     fi
   '';
 
@@ -397,6 +401,9 @@ in
     codex
     gh
     (mactop.overrideAttrs { doCheck = false; })
+    # Robot workstation SSH (see ~/CLAUDE.md); kept alongside the declared
+    # hudochenkov/sshpass brew so the tool survives either provisioning path.
+    sshpass
   ];
 
   # ============================================================================

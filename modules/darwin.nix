@@ -137,22 +137,58 @@ in
   # Homebrew integration
   homebrew = {
     enable = true;
+    taps = [
+      "homebrew/core"
+      "homebrew/cask"
+    ];
+    # Homebrew >= 6 refuses to load formulae from untrusted third-party taps,
+    # and bundle cleanup resets the trust store to the Brewfile's `trusted:`
+    # entries. nix-darwin's `taps` option cannot express `trusted:`, so the
+    # hudochenkov tap is declared here instead of in `taps` above.
+    extraConfig = ''
+      tap "hudochenkov/sshpass", trusted: true
+    '';
     onActivation = {
-      autoUpdate = true;
+      # Taps are pinned flake inputs (read-only store links); `brew update`
+      # cannot run against them. Version bumps come from `nix flake update`.
+      autoUpdate = false;
+      # Upgrade installed casks to the pinned tap versions on activation.
+      upgrade = true;
       cleanup = "zap";
+      # Homebrew >= 6 refuses non-interactive `bundle --cleanup` unless the
+      # cleanup is forced; activation has no TTY.
+      extraFlags = [ "--force-cleanup" ];
     };
+    brews = [
+      # Manually-installed CLI tools (install receipts: installed_on_request).
+      # Their dependency closures are kept by `brew bundle cleanup` automatically.
+      "llama.cpp"
+      "node"
+      "python@3.12"
+      "tmux"
+      "uv"
+      # Orphaned library keg, declared to keep it (preserve-everything, Aug 2026).
+      "fmt"
+      # Robot workstation SSH (see ~/CLAUDE.md); tap is pinned as a flake input.
+      "hudochenkov/sshpass/sshpass"
+    ];
+    # Keep manual `brew` invocations from attempting to update pinned taps.
+    global.autoUpdate = false;
     casks = [
       "signal"
       "brave-browser"
       "ghostty"
       "slack"
       "visual-studio-code"
+      "docker-desktop"
       "mactex"
       "iina"
       "qbittorrent"
       "protonvpn"
       "tailscale-app"
       "wispr-flow"
+      # Installed manually (Jul 2026); declared so cleanup = "zap" keeps it.
+      "moonlight"
     ];
   };
 

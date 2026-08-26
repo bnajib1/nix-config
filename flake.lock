@@ -3,16 +3,16 @@
     "brew-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1779646357,
-        "narHash": "sha256-rnnAaESXxItX4D9xCMGvs3hfDBjbbTYht7OluRcvT8k=",
+        "lastModified": 1786945682,
+        "narHash": "sha256-VBESSoJccikdhxh3vp3SQeG7cZXTOulMvVkoSqNDEhs=",
         "owner": "Homebrew",
         "repo": "brew",
-        "rev": "10a163ac127624caa80cc5cc5a705e97f3615b0e",
+        "rev": "5b90e281d4e0c8fbd6ca4d8358276fb305b8d0bd",
         "type": "github"
       },
       "original": {
         "owner": "Homebrew",
-        "ref": "5.1.14",
+        "ref": "6.0.18",
         "repo": "brew",
         "type": "github"
       }
@@ -34,6 +34,54 @@
       "original": {
         "owner": "nix-community",
         "repo": "home-manager",
+        "type": "github"
+      }
+    },
+    "homebrew-cask": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1787752530,
+        "narHash": "sha256-r6P0mXE3kvT6s32RU5zLoDFm4YqT7t9QHRahcq861p8=",
+        "owner": "homebrew",
+        "repo": "homebrew-cask",
+        "rev": "b30cb51f873cd5bda61ec8532c284a1cf47fe876",
+        "type": "github"
+      },
+      "original": {
+        "owner": "homebrew",
+        "repo": "homebrew-cask",
+        "type": "github"
+      }
+    },
+    "homebrew-core": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1787753551,
+        "narHash": "sha256-CLoqSjsO79SxPe9//fwbuHe9aq9equlSxCYLQdfdtVs=",
+        "owner": "homebrew",
+        "repo": "homebrew-core",
+        "rev": "01a2271b9a6cf53092715d1029645b0c92d8969e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "homebrew",
+        "repo": "homebrew-core",
+        "type": "github"
+      }
+    },
+    "homebrew-sshpass": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1477982527,
+        "narHash": "sha256-775i1sPxn9qULFjuerOOP03YzVX9y90Yck8V2YrTXuE=",
+        "owner": "hudochenkov",
+        "repo": "homebrew-sshpass",
+        "rev": "04cf50bd8e92d3c05de13ced8eb0f71c6db2f223",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hudochenkov",
+        "repo": "homebrew-sshpass",
         "type": "github"
       }
     },
@@ -62,11 +110,11 @@
         "brew-src": "brew-src"
       },
       "locked": {
-        "lastModified": 1780492467,
-        "narHash": "sha256-zMEJwtQPmsPPgPczFkyjWHgd1z0HagOPS2Wt2WDYLJY=",
+        "lastModified": 1787330919,
+        "narHash": "sha256-LslMncqN7uOOH5S88WZtO/EVt2HwD8ltUnfyANk+mC0=",
         "owner": "zhaofengli",
         "repo": "nix-homebrew",
-        "rev": "562332f97de9f5ba51aa647d70462e88222b2988",
+        "rev": "b00218e4aec0e5bf07d61a0bb13f842faa582d7b",
         "type": "github"
       },
       "original": {
@@ -94,6 +142,9 @@
     "root": {
       "inputs": {
         "home-manager": "home-manager",
+        "homebrew-cask": "homebrew-cask",
+        "homebrew-core": "homebrew-core",
+        "homebrew-sshpass": "homebrew-sshpass",
         "nix-darwin": "nix-darwin",
         "nix-homebrew": "nix-homebrew",
         "nixpkgs": "nixpkgs"
